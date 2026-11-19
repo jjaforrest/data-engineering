@@ -1,0 +1,7 @@
+# Ignore general data files and secrets
+*.csv
+*.zip
+.env
+
+# Exception for the versioned mock API dataset
+!api/data/paysim_api_v1.csv.gz
