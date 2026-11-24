@@ -4,7 +4,7 @@
 ```bash
 export RG_NAME="rg-de-path-engineer"
 export LOCATION="eastus"
-export VAULT_NAME="<your-unique-keyvault-name>"
+export VAULT_NAME="kv-depath-2fee01e0"
 export SECRET_NAME="paysim-api-key"
 export GH_USER="jjaforrest"
 export ENV_NAME="cae-paysim-mock"
