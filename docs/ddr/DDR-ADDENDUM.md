@@ -32,14 +32,14 @@
 
 ## 3. Mock API Determinism & Fault Injection
 
-All fault and ID generation parameters are injected via environment variables (sourced from Key Vault references where applicable).
-
-| Setting | Env Variable Name | Configured Value | Behavior & Purpose |
+| Setting | Source (Env Var / Code) | Configured Value | Behavior & Rebuild Notes |
 | :--- | :--- | :--- | :--- |
-| **PRNG Seed** | `FAULT_SEED` | `<42>` | Fixed integer seed ensuring deterministic fault sequences across runs |
-| **HTTP 500 Error Rate** | `FAULT_500_RATE` | `<e.g., 0.15>` | Float `0.0`–`1.0` representing probability of simulated `500 Internal Server Error` |
-| **Repeat / Retry Window** | `FAULT_REPEATS` | `<e.g., 3>` | Number of consecutive identical responses/faults before state advances |
-| **UUID v5 Namespace** | `UUID_V5_NAMESPACE` | `<e.g., 6ba7b810-9dad-11d1-80b4-00c04fd430c8>` | Fixed namespace UUID used to generate deterministic entity IDs from input keys |
+| **PRNG Seed** | `FAULT_SEED` env var (matches `DEFAULT_SEED` in `api/faults.py:9`) | `42` | Fixed integer seed for SHA-256 unit hashing (`f"{seed}:{page}:{page_size}:{salt}"`) |
+| **HTTP 500 Error Rate** | `error_rate` default in `FaultInjector` (`api/faults.py:62`) | `0.015` (1.5%) | Enforced within `0.01–0.02`; fails with HTTP `500` (`injected_fault`) on the **first** valid request per `(seed, page, pageSize)` since startup, then returns `200` on retry (**3** faulty pages at `pageSize=500`: `[13, 171, 178]`) |
+| **Repeated Records** | `repeat_count` default in `FaultInjector` (`api/faults.py:63`) | `120` records | Enforced `>= 100`; deterministic duplicate records copied from strictly earlier pages and appended to later pages (page 1 carries none) |
+| **UUID v5 Namespace** | `TRANSACTION_NAMESPACE` constant (`api/main.py:38`) | `7f3b9c2a-4d1e-4b8a-9c6f-2e5d8a1b4c7f` | Hardcoded namespace UUID; `transactionId` = `uuid5(TRANSACTION_NAMESPACE, str(row_number))` (1-indexed, no zero-padding) |
+| **Rate Limit Window** | `RateLimiter` default (`api/faults.py:24`) | `60` req / `60.0s` sliding window | Per-API-key in-memory sliding window (`deque` of `time.monotonic()` timestamps); returns HTTP `429` (`rate_limited`) with `Retry-After` header |
+| **API Key (`MOCK_API_KEY`)** | `MOCK_API_KEY` env var (`api/main.py:31`) -> `secretRef: paysim-api-key` | Key Vault secret `<kv-secret-name>` | Validated via `X-API-Key` header before rate limit and fault checks (code falls back to `"dev-processor-key"` if env var is unset) |
 
 ---
 
