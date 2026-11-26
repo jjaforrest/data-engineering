@@ -4,11 +4,14 @@
 ```bash
 export RG_NAME="rg-de-path-engineer"
 export LOCATION="eastus"
-export VAULT_NAME="kv-depath-2fee01e0"
+export VAULT_NAME="kv-de-path-2fee01e0"
 export SECRET_NAME="paysim-api-key"
+export SECRET_VALUE=$(openssl rand -base64 32)
 export GH_USER="jjaforrest"
 export ENV_NAME="cae-paysim-mock"
 export APP_NAME="ca-paysim-api"
+export CURRENT_USER_ID=$(az ad signed-in-user show --query id -o tsv)
+export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 export IMAGE_TAG="v1"
 ```
 
@@ -19,12 +22,33 @@ az group create --name "$RG_NAME" --location "$LOCATION" --tags project=de-path
 az keyvault create \
   --name "$VAULT_NAME" \
   --resource-group "$RG_NAME" \
-  --location "$LOCATION"
+  --location "$LOCATION" \
+  --enable-rbac-authorization true
+
+az role assignment create \
+  --role "Key Vault Secrets Officer" \
+  --assignee "$CURRENT_USER_ID" \
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME/providers/Microsoft.KeyVault/vaults/$VAULT_NAME"
+
+az role assignment create \
+  --role "Key Vault Secrets User" \
+  --assignee "$CURRENT_USER_ID" \
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME/providers/Microsoft.KeyVault/vaults/$VAULT_NAME"
 
 az keyvault secret set \
 --vault-name "$VAULT_NAME" \
 --name "$SECRET_NAME" \
---value "<generated-api-key>"
+--value "$SECRET_VALUE"
+
+echo "Using Key Vault Name: " $VAULT_NAME
+
+KV_ID=$(az keyvault show --name "$VAULT_NAME" --resource-group "$RG_NAME" --query id -o tsv)
+
+az role assignment list \
+  --scope "$KV_ID" \
+  --query "[].{Principal:principalName, Type:principalType, Role:roleDefinitionName}" \
+  -o table
+
 ```
 
 ## Build `linux/amd64` Image and Verify Locally
