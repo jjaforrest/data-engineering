@@ -1,0 +1,94 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.15.0/schema.json",
+  "name": "37a10a58670b9bff1a0b",
+  "position": {
+    "x": 340,
+    "y": 220,
+    "z": 0,
+    "height": 284.28571428571428,
+    "width": 355.71428571428572,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "core_banking_accounts_test"
+                    }
+                  },
+                  "Property": "account_type"
+                }
+              },
+              "queryRef": "core_banking_accounts_test.account_type",
+              "nativeQueryRef": "account_type"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "core_banking_accounts_test"
+                        }
+                      },
+                      "Property": "balance"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(core_banking_accounts_test.balance)",
+              "nativeQueryRef": "Sum of balance"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "9e8f1d32b5472f4edd69",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "core_banking_accounts_test"
+              }
+            },
+            "Property": "account_type"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "099969ffd11cb290a322",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "core_banking_accounts_test"
+                  }
+                },
+                "Property": "balance"
+              }
+            },
+            "Function": 0
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

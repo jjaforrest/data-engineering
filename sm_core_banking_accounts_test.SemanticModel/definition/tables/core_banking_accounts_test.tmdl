@@ -1,0 +1,86 @@
+table core_banking_accounts_test
+	lineageTag: 7a9f4933-10c6-4067-81ee-49a987b6b773
+	sourceLineageTag: [dbo].[core_banking_accounts_test]
+
+	column account_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 31d475b4-5fe4-4123-b7d1-b053dc5c627a
+		sourceLineageTag: account_id
+		summarizeBy: none
+		sourceColumn: account_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 3bbd2f5e-0529-4023-b555-6d82d220524c
+		sourceLineageTag: customer_id
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_type
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: f27b54ee-e604-47b0-a9bd-4817697c12c5
+		sourceLineageTag: account_type
+		summarizeBy: none
+		sourceColumn: account_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column balance
+		dataType: double
+		sourceProviderType: float
+		lineageTag: d23e196f-a3ed-4ad1-a1aa-4b44ee1c8c22
+		sourceLineageTag: balance
+		summarizeBy: sum
+		sourceColumn: balance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column currency
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 9c8259dd-f310-4058-9e77-73f0768b96b7
+		sourceLineageTag: currency
+		summarizeBy: none
+		sourceColumn: currency
+
+		annotation SummarizationSetBy = Automatic
+
+	column opened_date
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 5bc6dff0-6371-49b3-ab76-40e0d9b0db71
+		sourceLineageTag: opened_date
+		summarizeBy: none
+		sourceColumn: opened_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 95fa1fe6-7949-46be-b5a4-012873da6b22
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition core_banking_accounts_test = entity
+		mode: directLake
+		source
+			entityName: core_banking_accounts_test
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

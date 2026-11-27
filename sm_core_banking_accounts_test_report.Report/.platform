@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "sm_core_banking_accounts_test_report"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6b9366c2-bb30-8b2a-4fd7-5476dc900f5f"
+  }
+}
