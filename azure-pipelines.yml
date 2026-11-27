@@ -3,6 +3,9 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+variables:
+- group: GITHUB
+
 trigger:
   branches:
     include:
@@ -21,4 +24,7 @@ steps:
     git config user.name "Fabric Git Mirror"
     git remote add github https://$(GITHUB_PAT)@github.com/jjaforrest/data-engineering.git
     git push github HEAD:$(Build.SourceBranch) --force
+  env:
+    GITHUB_PAT: $(GITHUB_PAT)
   displayName: 'Mirror branch to GitHub'
+  
