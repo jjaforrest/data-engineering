@@ -39,11 +39,6 @@ az keyvault secret set \
 --vault-name "$VAULT_NAME" \
 --name "$SECRET_NAME" \
 --value "$SECRET_VALUE"
-```
-### Verify Resource Group, Key Vault, & Roles
-```bash
-echo "Resource Group: " 
-az group list --output table
 
 echo "Using Key Vault Name: " $VAULT_NAME
 
