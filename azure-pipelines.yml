@@ -1,0 +1,24 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+    - main
+    - gate/*
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- checkout: self
+  persistCredentials: true
+  fetchDepth: 0
+- script: |
+    git config user.email "fabric-sync@noreply.com"
+    git config user.name "Fabric Git Mirror"
+    git remote add github https://$(GITHUB_PAT)@github.com/jjaforrest/data-engineering.git
+    git push github HEAD:$(Build.SourceBranch) --force
+  displayName: 'Mirror branch to GitHub'
